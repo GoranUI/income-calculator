@@ -13,6 +13,10 @@ const App = () => {
   const [usdToRsdRate, setUsdToRsdRate] = useState(1); // Default value of 1 for USD to RSD conversion
 
   useEffect(() => {
+    document.title = "Samo Pare Pare Crni Cerak Fulla Gang"
+ }, []);
+
+  useEffect(() => {
     const fetchExchangeRate = async () => {
       try {
         const response = await fetch('https://v6.exchangerate-api.com/v6/bd7aaabed56a93e5652369a6/latest/USD');
