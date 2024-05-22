@@ -40,23 +40,24 @@ const App = () => {
 
   const calculate = () => {
     const bruto = parseFloat(brutoIncome);
-    if (isNaN(bruto)) {
+    if (isNaN(bruto) || bruto > 999999) {
       alert('Please enter a valid bruto income.');
       return;
     }
+    
 
     const dateReq = new Date(dateRequested);
     const usdRate = usdToRsdRate * 0.95;
     // Option 1: Direct PayPal Payment
     const paypalFee = 0.05465 * bruto;
-    const potentialIncomePayPal = (bruto - paypalFee) * (usdToRsdRate - 5);
+    const netoIncomePayPal = (bruto - paypalFee) * (usdToRsdRate - 5);
     const dateEstimationPayPal1 = addBusinessDays(dateReq, 2);
     const dateEstimationPayPal2 = addBusinessDays(dateReq, 3);
 
     // Option 2: Upwork Payment
     const upworkFee = 0.1 * bruto;
     const transactionFee = 1;
-    const potentialIncomeUpwork = (bruto - upworkFee - transactionFee) * (usdToRsdRate - 5);
+    const netoIncomeUpwork = (bruto - upworkFee - transactionFee) * (usdToRsdRate - 5);
     let dateEstimationUpwork1, dateEstimationUpwork2;
 
     if (upworkType === 'fixed') {
@@ -77,13 +78,13 @@ const App = () => {
       brutoIncome: bruto.toFixed(2),
       paypal: {
         fee: paypalFee.toFixed(2),
-        potentialIncome: potentialIncomePayPal.toFixed(2),
+        netoIncome: netoIncomePayPal.toFixed(2),
         dateEstimation: `${dateEstimationPayPal1.toDateString()} - ${dateEstimationPayPal2.toDateString()}`
       },
       upwork: {
         fee: upworkFee.toFixed(2),
         transactionFee: transactionFee.toFixed(2),
-        potentialIncome: potentialIncomeUpwork.toFixed(2),
+        netoIncome: netoIncomeUpwork.toFixed(2),
         dateEstimation: `${dateEstimationUpwork1.toDateString()} - ${dateEstimationUpwork2.toDateString()}`
       },
       dateRequested: dateReq.toDateString()
@@ -99,6 +100,7 @@ const App = () => {
             <FormLabel>Enter income in USD</FormLabel>
             <Input
               type="number"
+              placeholder="eg. 100"
               step="0.01"
               value={brutoIncome}
               onChange={(e) => setBrutoIncome(e.target.value)}
@@ -135,7 +137,7 @@ const App = () => {
               <Heading as="h3" size="md">Option 1: Direct PayPal Payment</Heading>
               <Text>Bruto Income: ${formatNumber(results.brutoIncome)}</Text>
               <Text>PayPal Fee: ${formatNumber(results.paypal.fee)}</Text>
-              <Text>Potential Income: ~{formatNumber(results.paypal.potentialIncome)} RSD</Text>
+              <Text>Neto Income: ~{formatNumber(results.paypal.netoIncome)} RSD</Text>
               <Text>Date Requested: {results.dateRequested}</Text>
               <Text>Date Estimation to Arrive: {results.paypal.dateEstimation}</Text>
             </Box>
@@ -144,7 +146,7 @@ const App = () => {
               <Text>Bruto Income: ${formatNumber(results.brutoIncome)}</Text>
               <Text>Upwork Fee: ${formatNumber(results.upwork.fee)} (10%)</Text>
               <Text>Transaction Fee: ${formatNumber(results.upwork.transactionFee)} (fixed)</Text>
-              <Text>Potential Income: ~{formatNumber(results.upwork.potentialIncome)} RSD</Text>
+              <Text>Neto Income: ~{formatNumber(results.upwork.netoIncome)} RSD</Text>
               <Text>Date Requested: {results.dateRequested}</Text>
               <Text>Date Estimation to Arrive: {results.upwork.dateEstimation}</Text>
             </Box>
