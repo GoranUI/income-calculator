@@ -46,17 +46,17 @@ const App = () => {
     }
 
     const dateReq = new Date(dateRequested);
-
+    const usdRate = usdToRsdRate * 0.95;
     // Option 1: Direct PayPal Payment
     const paypalFee = 0.05465 * bruto;
-    const potentialIncomePayPal = (bruto - paypalFee) * usdToRsdRate;
+    const potentialIncomePayPal = (bruto - paypalFee) * (usdToRsdRate - 5);
     const dateEstimationPayPal1 = addBusinessDays(dateReq, 2);
     const dateEstimationPayPal2 = addBusinessDays(dateReq, 3);
 
     // Option 2: Upwork Payment
     const upworkFee = 0.1 * bruto;
     const transactionFee = 1;
-    const potentialIncomeUpwork = (bruto - upworkFee - transactionFee) * usdToRsdRate;
+    const potentialIncomeUpwork = (bruto - upworkFee - transactionFee) * (usdToRsdRate - 5);
     let dateEstimationUpwork1, dateEstimationUpwork2;
 
     if (upworkType === 'fixed') {
@@ -73,6 +73,7 @@ const App = () => {
     }
 
     setResults({
+      usdRateIs: usdRate.toFixed(2),
       brutoIncome: bruto.toFixed(2),
       paypal: {
         fee: paypalFee.toFixed(2),
@@ -114,6 +115,7 @@ const App = () => {
             />
           </FormControl>
         </Box>
+
         <Box mb={4}>
           <FormControl id="upworkType">
             <FormLabel>Upwork Contract Type:</FormLabel>
